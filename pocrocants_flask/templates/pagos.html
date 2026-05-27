@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Crocants — Pagos</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg:       #0d0d0f;
+      --surface:  #161618;
+      --surface2: #1e1e21;
+      --border:   #2a2a2e;
+      --green:    #3dff6e;
+      --green-dim:#1a4d2e;
+      --yellow:   #f5a623;
+      --yellow-dim:#3d2a00;
+      --blue:     #4a9eff;
+      --blue-dim: #0d2b4d;
+      --red:      #ff4a6b;
+      --red-dim:  #3d0d18;
+      --text:     #e8e8ee;
+      --muted:    #6b6b78;
+      --radius:   10px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Syne', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── NAV ── */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      height: 60px;
+      border-bottom: 1px solid var(--border);
+    }
+    .logo { font-size: 1.4rem; font-weight: 800; letter-spacing: -1px; }
+    .logo span { color: var(--green); }
+    nav a { color: var(--muted); text-decoration: none; font-size: .85rem; }
+    nav a:hover { color: var(--text); }
+
+    /* ── HEADER ── */
+    .page-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 2.5rem 2rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .icon-box {
+      width: 52px; height: 52px;
+      border-radius: 12px;
+      background: var(--surface2);
+      display: grid; place-items: center;
+      font-size: 1.5rem;
+    }
+    .page-header h1 { font-size: 2.2rem; font-weight: 800; }
+    .page-header p  { color: var(--muted); font-size: .9rem; margin-top: .15rem; }
+
+    /* ── STATS ── */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--border);
+      margin: 1.5rem 2rem;
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .stat {
+      background: var(--surface);
+      padding: 1.4rem 1.8rem;
+      display: flex;
+      flex-direction: column;
+      gap: .3rem;
+    }
+    .stat-val {
+      font-family: 'Space Mono', monospace;
+      font-size: 2rem;
+      font-weight: 700;
+      line-height: 1;
+    }
+    .stat-label { font-size: .75rem; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+    .c-green { color: var(--green); }
+    .c-yellow { color: var(--yellow); }
+    .c-blue   { color: var(--blue); }
+    .c-red    { color: var(--red); }
+
+    /* ── MAIN GRID ── */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 1.5rem;
+      padding: 0 2rem 2rem;
+      align-items: start;
+    }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+    }
+    .card h2 { font-size: 1rem; font-weight: 700; margin-bottom: 1.2rem; }
+
+    /* ── FORM ── */
+    .form-group { margin-bottom: 1rem; }
+    label { display: block; font-size: .75rem; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: .4rem; }
+    input, select, textarea {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: 'Syne', sans-serif;
+      font-size: .9rem;
+      padding: .65rem 1rem;
+      outline: none;
+      transition: border-color .2s;
+    }
+    input:focus, select:focus { border-color: var(--green); }
+    input::placeholder { color: var(--muted); }
+    select option { background: var(--surface2); }
+
+    .amount-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: .75rem;
+    }
+    .amount-display {
+      background: var(--bg);
+      border: 1px solid var(--green-dim);
+      border-radius: 8px;
+      padding: .65rem 1rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--green);
+      text-align: right;
+    }
+
+    .method-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: .5rem;
+      margin-bottom: 1rem;
+    }
+    .method-btn {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: .75rem .5rem;
+      color: var(--muted);
+      font-family: 'Syne', sans-serif;
+      font-size: .8rem;
+      cursor: pointer;
+      text-align: center;
+      transition: all .2s;
+      display: flex; flex-direction: column; align-items: center; gap: .3rem;
+    }
+    .method-btn:hover { border-color: var(--green); color: var(--text); }
+    .method-btn.active { border-color: var(--green); background: var(--green-dim); color: var(--green); }
+    .method-btn .ico { font-size: 1.2rem; }
+
+    .btn-submit {
+      width: 100%;
+      background: var(--green);
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      padding: .8rem;
+      font-family: 'Syne', sans-serif;
+      font-size: .95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity .2s;
+      margin-top: .5rem;
+    }
+    .btn-submit:hover { opacity: .85; }
+
+    /* ── TABLE ── */
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+    thead th {
+      text-align: left;
+      padding: .6rem 1rem;
+      font-size: .72rem;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+    }
+    tbody tr { border-bottom: 1px solid var(--border); transition: background .15s; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: var(--surface2); }
+    tbody td { padding: .85rem 1rem; vertical-align: middle; }
+    .pid { font-family: 'Space Mono', monospace; color: var(--green); font-size: .82rem; }
+    .total { font-family: 'Space Mono', monospace; font-weight: 700; }
+
+    .badge {
+      display: inline-flex; align-items: center; gap: .35rem;
+      padding: .3rem .75rem;
+      border-radius: 6px;
+      font-size: .78rem;
+      font-weight: 600;
+    }
+    .badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+    .badge-green  { background: var(--green-dim);  color: var(--green); }
+    .badge-yellow { background: var(--yellow-dim); color: var(--yellow); }
+    .badge-red    { background: var(--red-dim);    color: var(--red); }
+    .badge-blue   { background: var(--blue-dim);   color: var(--blue); }
+
+    .method-tag {
+      font-size: .78rem;
+      color: var(--muted);
+      background: var(--surface2);
+      padding: .2rem .6rem;
+      border-radius: 5px;
+    }
+
+    /* ── RESUMEN DIARIO ── */
+    .summary-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: .75rem;
+      margin-bottom: 1.2rem;
+    }
+    .sum-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+    }
+    .sum-card .val { font-family: 'Space Mono', monospace; font-size: 1.1rem; font-weight: 700; }
+    .sum-card .lbl { font-size: .72rem; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin-top: .2rem; }
+
+    @media (max-width: 900px) {
+      .main-grid { grid-template-columns: 1fr; }
+      .stats { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">Croc<span>ants</span></div>
+  <a href="/">← Volver al inicio</a>
+</nav>
+
+<!-- HEADER -->
+<div class="page-header">
+  <div class="icon-box">💳</div>
+  <div>
+    <h1>Pagos</h1>
+    <p>Cobros, historial y reembolsos</p>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat">
+    <span class="stat-val c-green">S/ 128</span>
+    <span class="stat-label">Total hoy</span>
+  </div>
+  <div class="stat">
+    <span class="stat-val c-yellow">2</span>
+    <span class="stat-label">Pendientes</span>
+  </div>
+  <div class="stat">
+    <span class="stat-val c-blue">5</span>
+    <span class="stat-label">Cobrados</span>
+  </div>
+  <div class="stat">
+    <span class="stat-val c-red">1</span>
+    <span class="stat-label">Reembolsos</span>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main-grid">
+
+  <!-- FORM -->
+  <div class="card">
+    <h2>Registrar Cobro</h2>
+
+    <div class="form-group">
+      <label>Pedido</label>
+      <select>
+        <option>Seleccionar pedido...</option>
+        <option>P001 — Familia López (S/ 40.00)</option>
+        <option>P002 — Rodrigo M. (S/ 23.00)</option>
+        <option>P003 — Delivery #5 (S/ 65.00)</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Método de pago</label>
+      <div class="method-grid">
+        <button class="method-btn active" onclick="selectMethod(this)">
+          <span class="ico">💵</span> Efectivo
+        </button>
+        <button class="method-btn" onclick="selectMethod(this)">
+          <span class="ico">📱</span> Yape
+        </button>
+        <button class="method-btn" onclick="selectMethod(this)">
+          <span class="ico">💳</span> Tarjeta
+        </button>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Montos</label>
+      <div class="amount-row">
+        <div>
+          <input type="number" placeholder="Monto cobrado (S/)" />
+        </div>
+        <div class="amount-display">S/ 0.00</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Vuelto</label>
+      <div class="amount-display" style="font-size:.95rem;">S/ 0.00</div>
+    </div>
+
+    <div class="form-group">
+      <label>Observación (opcional)</label>
+      <input type="text" placeholder="Ej: Pagó con billete de S/100" />
+    </div>
+
+    <button class="btn-submit">Registrar Pago</button>
+  </div>
+
+  <!-- TABLE SIDE -->
+  <div>
+    <!-- Resumen -->
+    <div class="card" style="margin-bottom:1rem;">
+      <h2>Resumen del día</h2>
+      <div class="summary-row">
+        <div class="sum-card">
+          <div class="val c-green">S/ 103.00</div>
+          <div class="lbl">Efectivo</div>
+        </div>
+        <div class="sum-card">
+          <div class="val c-blue">S/ 25.00</div>
+          <div class="lbl">Yape / Plin</div>
+        </div>
+        <div class="sum-card">
+          <div class="val c-yellow">S/ 0.00</div>
+          <div class="lbl">Tarjeta</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Historial -->
+    <div class="card">
+      <h2>Historial de Pagos</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Cliente</th>
+              <th>Total</th>
+              <th>Método</th>
+              <th>Hora</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="pid">P001</td>
+              <td>Familia López</td>
+              <td class="total c-green">S/ 40.00</td>
+              <td><span class="method-tag">💵 Efectivo</span></td>
+              <td style="color:var(--muted);font-size:.82rem;">12:34</td>
+              <td><span class="badge badge-green">Cobrado</span></td>
+            </tr>
+            <tr>
+              <td class="pid">P002</td>
+              <td>Rodrigo M.</td>
+              <td class="total c-green">S/ 23.00</td>
+              <td><span class="method-tag">📱 Yape</span></td>
+              <td style="color:var(--muted);font-size:.82rem;">13:10</td>
+              <td><span class="badge badge-yellow">Pendiente</span></td>
+            </tr>
+            <tr>
+              <td class="pid">P003</td>
+              <td>Delivery #5</td>
+              <td class="total c-green">S/ 65.00</td>
+              <td><span class="method-tag">💵 Efectivo</span></td>
+              <td style="color:var(--muted);font-size:.82rem;">13:45</td>
+              <td><span class="badge badge-yellow">Pendiente</span></td>
+            </tr>
+            <tr>
+              <td class="pid">P000</td>
+              <td>Mesa 2</td>
+              <td class="total c-red">- S/ 20.00</td>
+              <td><span class="method-tag">💳 Tarjeta</span></td>
+              <td style="color:var(--muted);font-size:.82rem;">11:20</td>
+              <td><span class="badge badge-red">Reembolso</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function selectMethod(btn) {
+    document.querySelectorAll('.method-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  // Calcular vuelto dinámicamente
+  const montoInput = document.querySelector('input[type=number]');
+  const displays = document.querySelectorAll('.amount-display');
+  const orderPrices = { 'P001': 40, 'P002': 23, 'P003': 65 };
+  let currentTotal = 0;
+
+  document.querySelector('select').addEventListener('change', function() {
+    const match = this.value.match(/S\/ ([\d.]+)/);
+    currentTotal = match ? parseFloat(match[1]) : 0;
+    displays[0].textContent = `S/ ${currentTotal.toFixed(2)}`;
+    calcVuelto();
+  });
+
+  montoInput?.addEventListener('input', calcVuelto);
+
+  function calcVuelto() {
+    const pagado = parseFloat(montoInput?.value) || 0;
+    const vuelto = pagado - currentTotal;
+    displays[1].textContent = vuelto >= 0 ? `S/ ${vuelto.toFixed(2)}` : 'S/ 0.00';
+    displays[1].style.color = vuelto >= 0 ? 'var(--green)' : 'var(--red)';
+  }
+</script>
+</body>
+</html>

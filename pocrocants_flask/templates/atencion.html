@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Crocants — Atención al Cliente</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #0d0d0d; --surface: #161616; --border: #2a2a2a;
+      --accent: #00e87a; --text: #f0f0f0; --muted: #888;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; }
+ 
+    header {
+      padding: 1.5rem 3rem; display: flex; align-items: center;
+      justify-content: space-between; border-bottom: 1px solid var(--border);
+    }
+    .logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.4rem; color: var(--accent); text-decoration: none; }
+    .logo span { color: var(--text); }
+    .back { color: var(--muted); text-decoration: none; font-size: 0.9rem; display: flex; align-items: center; gap: 0.4rem; transition: color 0.2s; }
+    .back:hover { color: var(--accent); }
+ 
+    .page-header { padding: 3rem 3rem 2rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 1.2rem; }
+    .page-icon { width: 56px; height: 56px; background: #1a1a1a; border: 1px solid var(--border); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; }
+    .page-header h1 { font-family: 'Syne', sans-serif; font-size: 1.8rem; font-weight: 800; }
+    .page-header p { color: var(--muted); font-size: 0.9rem; margin-top: 0.2rem; }
+ 
+    .content { padding: 2.5rem 3rem; display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+ 
+    /* Formulario nueva consulta */
+    .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 2rem; }
+    .panel h2 { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 700; margin-bottom: 1.5rem; }
+    .field { margin-bottom: 1.2rem; }
+    .field label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 0.4rem; }
+    .field input, .field select, .field textarea {
+      width: 100%; background: #111; border: 1px solid var(--border); border-radius: 8px;
+      color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.95rem;
+      padding: 0.7rem 1rem; transition: border-color 0.2s; outline: none;
+    }
+    .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--accent); }
+    .field textarea { resize: vertical; min-height: 100px; }
+    .field select option { background: #1a1a1a; }
+    .btn-primary {
+      width: 100%; background: var(--accent); color: #000; font-family: 'Syne', sans-serif;
+      font-weight: 700; font-size: 0.95rem; padding: 0.8rem; border: none; border-radius: 8px;
+      cursor: pointer; transition: opacity 0.2s;
+    }
+    .btn-primary:hover { opacity: 0.85; }
+ 
+    /* Lista de consultas */
+    .ticket-list { display: flex; flex-direction: column; gap: 1rem; }
+    .ticket {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+      padding: 1.2rem 1.4rem; display: flex; flex-direction: column; gap: 0.5rem;
+    }
+    .ticket-top { display: flex; justify-content: space-between; align-items: center; }
+    .ticket-id { font-family: 'Syne', sans-serif; font-size: 0.85rem; color: var(--accent); font-weight: 700; }
+    .badge {
+      font-size: 0.75rem; padding: 0.2rem 0.7rem; border-radius: 50px; font-weight: 600;
+    }
+    .badge.abierto { background: #1a3a2a; color: #00e87a; border: 1px solid #00e87a44; }
+    .badge.proceso { background: #2a2200; color: #f0b429; border: 1px solid #f0b42944; }
+    .badge.cerrado { background: #1a1a1a; color: var(--muted); border: 1px solid var(--border); }
+    .ticket-cliente { font-weight: 500; font-size: 0.95rem; }
+    .ticket-msg { color: var(--muted); font-size: 0.88rem; line-height: 1.5; }
+    .ticket-meta { color: #555; font-size: 0.8rem; }
+ 
+    /* Toast */
+    .toast {
+      position: fixed; bottom: 2rem; right: 2rem;
+      background: var(--accent); color: #000; font-family: 'Syne', sans-serif;
+      font-weight: 700; padding: 0.9rem 1.5rem; border-radius: 10px;
+      transform: translateY(100px); opacity: 0; transition: all 0.3s; z-index: 99;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+ 
+    @media (max-width: 768px) {
+      header, .page-header, .content { padding-left: 1.5rem; padding-right: 1.5rem; }
+      .content { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+ 
+<header>
+  <a href="/" class="logo">Croc<span>ants</span></a>
+  <a href="/" class="back">← Volver al inicio</a>
+</header>
+ 
+<div class="page-header">
+  <div class="page-icon">🎧</div>
+  <div>
+    <h1>Atención al Cliente</h1>
+    <p>Registra y gestiona consultas, reclamos y solicitudes</p>
+  </div>
+</div>
+ 
+<div class="content">
+ 
+  <!-- Formulario -->
+  <div class="panel">
+    <h2>Nueva Consulta</h2>
+    <div class="field">
+      <label>Nombre del Cliente</label>
+      <input type="text" id="nombre" placeholder="Ej: Juan Pérez"/>
+    </div>
+    <div class="field">
+      <label>Teléfono / WhatsApp</label>
+      <input type="tel" id="telefono" placeholder="Ej: 999 888 777"/>
+    </div>
+    <div class="field">
+      <label>Tipo de consulta</label>
+      <select id="tipo">
+        <option value="">Seleccionar...</option>
+        <option>Reclamo por pedido</option>
+        <option>Consulta sobre menú</option>
+        <option>Problema con pago</option>
+        <option>Felicitación / Sugerencia</option>
+        <option>Otro</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Descripción</label>
+      <textarea id="descripcion" placeholder="Describe el motivo de la consulta..."></textarea>
+    </div>
+    <button class="btn-primary" onclick="registrarTicket()">Registrar Consulta</button>
+  </div>
+ 
+  <!-- Tickets -->
+  <div>
+    <div class="panel" style="margin-bottom:1.5rem; padding: 1rem 1.4rem;">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-family:'Syne',sans-serif; font-weight:700;">Consultas Recientes</span>
+        <span id="total-badge" style="color:var(--accent); font-size:0.85rem; font-weight:600;">0 activas</span>
+      </div>
+    </div>
+    <div class="ticket-list" id="ticket-list">
+      <!-- tickets dinámicos -->
+    </div>
+  </div>
+ 
+</div>
+ 
+<div class="toast" id="toast">✓ Consulta registrada</div>
+ 
+<script>
+  const tickets = [
+    { id: '#001', cliente: 'María Quispe', tipo: 'Reclamo por pedido', msg: 'Le faltó la salsa criolla en su pedido de pollo a la brasa.', estado: 'abierto', hora: 'Hoy 12:30' },
+    { id: '#002', cliente: 'Carlos Huanca', tipo: 'Consulta sobre menú', msg: '¿Tienen opciones sin picante para niños?', estado: 'proceso', hora: 'Hoy 11:15' },
+    { id: '#003', cliente: 'Ana Flores', tipo: 'Felicitación', msg: 'Excelente atención y el pollo estuvo delicioso.', estado: 'cerrado', hora: 'Ayer 19:00' },
+  ];
+ 
+  function renderTickets() {
+    const list = document.getElementById('ticket-list');
+    list.innerHTML = tickets.map(t => `
+      <div class="ticket">
+        <div class="ticket-top">
+          <span class="ticket-id">${t.id}</span>
+          <span class="badge ${t.estado}">${t.estado.charAt(0).toUpperCase() + t.estado.slice(1)}</span>
+        </div>
+        <div class="ticket-cliente">${t.cliente} · <span style="color:var(--muted); font-size:0.85rem;">${t.tipo}</span></div>
+        <div class="ticket-msg">${t.msg}</div>
+        <div class="ticket-meta">${t.hora}</div>
+      </div>
+    `).join('');
+    const activas = tickets.filter(t => t.estado !== 'cerrado').length;
+    document.getElementById('total-badge').textContent = activas + ' activas';
+  }
+ 
+  function registrarTicket() {
+    const nombre = document.getElementById('nombre').value.trim();
+    const tipo = document.getElementById('tipo').value;
+    const desc = document.getElementById('descripcion').value.trim();
+    if (!nombre || !tipo || !desc) { alert('Por favor completa todos los campos.'); return; }
+    const id = '#' + String(tickets.length + 1).padStart(3, '0');
+    tickets.unshift({ id, cliente: nombre, tipo, msg: desc, estado: 'abierto', hora: 'Ahora mismo' });
+    renderTickets();
+    document.getElementById('nombre').value = '';
+    document.getElementById('telefono').value = '';
+    document.getElementById('tipo').value = '';
+    document.getElementById('descripcion').value = '';
+    const toast = document.getElementById('toast');
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2500);
+  }
+ 
+  renderTickets();
+</script>
+</body>
+</html>
