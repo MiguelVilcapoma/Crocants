@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Crocants — Pollería</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #0d0d0d;
+      --surface: #161616;
+      --border: #2a2a2a;
+      --accent: #00e87a;
+      --accent2: #00b85e;
+      --text: #f0f0f0;
+      --muted: #888;
+      --wa: #25D366;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+    }
+ 
+    /* HEADER */
+    header {
+      padding: 2rem 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+    }
+    .logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.4rem;
+      letter-spacing: -0.5px;
+      color: var(--accent);
+    }
+    .logo span { color: var(--text); }
+ 
+    /* HERO */
+    .hero {
+      padding: 5rem 3rem 3rem;
+      max-width: 800px;
+    }
+    .hero h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2.2rem, 5vw, 3.8rem);
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+    }
+    .hero h1 em {
+      font-style: normal;
+      color: var(--accent);
+    }
+    .hero p {
+      color: var(--muted);
+      font-size: 1.1rem;
+      max-width: 520px;
+      line-height: 1.7;
+    }
+ 
+    /* GRID DE MÓDULOS */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5px;
+      margin: 3rem 0 0;
+      border-top: 1.5px solid var(--border);
+      border-left: 1.5px solid var(--border);
+    }
+    .card {
+      background: var(--surface);
+      border-right: 1.5px solid var(--border);
+      border-bottom: 1.5px solid var(--border);
+      padding: 2.5rem 2rem;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      transition: background 0.2s, transform 0.2s;
+      cursor: pointer;
+    }
+    .card:hover {
+      background: #1e1e1e;
+    }
+    .card:hover .icon-wrap {
+      background: var(--accent);
+      color: #000;
+    }
+    .icon-wrap {
+      width: 52px; height: 52px;
+      border-radius: 12px;
+      background: #222;
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem;
+      transition: background 0.2s, color 0.2s;
+    }
+    .card h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+    }
+    .card p {
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+    .card .arrow {
+      margin-top: auto;
+      font-size: 1.2rem;
+      color: var(--accent);
+      opacity: 0;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .card:hover .arrow { opacity: 1; transform: translateX(4px); }
+ 
+    /* WHATSAPP BANNER */
+    .wa-banner {
+      margin: 3rem;
+      background: linear-gradient(135deg, #0a2e18 0%, #0d3d22 100%);
+      border: 1px solid #1a5c35;
+      border-radius: 16px;
+      padding: 2.5rem 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+    .wa-info h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+    }
+    .wa-info p { color: #7acb99; font-size: 0.95rem; }
+    .wa-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.7rem;
+      background: var(--wa);
+      color: #fff;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      padding: 0.85rem 2rem;
+      border-radius: 50px;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+      white-space: nowrap;
+    }
+    .wa-btn:hover {
+      transform: scale(1.04);
+      box-shadow: 0 0 24px rgba(37,211,102,0.4);
+    }
+    .wa-icon { font-size: 1.3rem; }
+ 
+    /* FOOTER */
+    footer {
+      padding: 2rem 3rem;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.85rem;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+ 
+    @media (max-width: 600px) {
+      header, .hero, .wa-banner, footer { padding-left: 1.5rem; padding-right: 1.5rem; }
+      .wa-banner { margin: 2rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+ 
+  <header>
+    <div class="logo">Croc<span>ants</span></div>
+    <span style="color:var(--muted); font-size:0.85rem;">🍗 Pollería</span>
+  </header>
+ 
+  <section style="padding: 0 3rem;">
+    <div class="hero">
+      <h1>Bienvenido a <em>Crocants</em><br>Pollería de confianza</h1>
+      <p>Gestiona todo desde aquí: atiende a tus clientes, administra pedidos, procesa pagos y asegura la calidad de cada plato.</p>
+    </div>
+ 
+    <div class="grid">
+ 
+      <!-- Atención al Cliente -->
+      <a href="/atencion" class="card">
+        <div class="icon-wrap">🎧</div>
+        <h2>Atención al Cliente</h2>
+        <p>Gestiona consultas, reclamos y soporte en tiempo real con seguimiento completo.</p>
+        <span class="arrow">→</span>
+      </a>
+ 
+      <!-- Pedidos -->
+      <a href="/pedidos" class="card">
+        <div class="icon-wrap">📦</div>
+        <h2>Pedidos</h2>
+        <p>Registra, actualiza y monitorea el estado de cada pedido desde su creación hasta la entrega.</p>
+        <span class="arrow">→</span>
+      </a>
+ 
+      <!-- Pagos -->
+      <a href="/pagos" class="card">
+        <div class="icon-wrap">💳</div>
+        <h2>Pagos</h2>
+        <p>Procesa cobros, revisa el historial de transacciones y gestiona reembolsos fácilmente.</p>
+        <span class="arrow">→</span>
+      </a>
+ 
+      <!-- Verificación de Calidad -->
+      <a href="/calidad" class="card">
+        <div class="icon-wrap">✅</div>
+        <h2>Verificación de Calidad</h2>
+        <p>Supervisa estándares, registra inspecciones y genera reportes de control de calidad.</p>
+        <span class="arrow">→</span>
+      </a>
+ 
+    </div>
+  </section>
+ 
+  <!-- WhatsApp -->
+  <div class="wa-banner">
+    <div class="wa-info">
+      <h3>¿Necesitas ayuda inmediata?</h3>
+      <p>Contáctanos directamente por WhatsApp, disponible para atenderte.</p>
+    </div>
+    <a href="https://wa.me/51924535494" target="_blank" rel="noopener" class="wa-btn">
+      <span class="wa-icon">💬</span> Escribir por WhatsApp
+    </a>
+  </div>
+ 
+  <footer>
+    <span>© 2026 Crocants Pollería</span>
+    <span>Sistema de gestión interno</span>
+  </footer>
+ 
+</body>
+</html>

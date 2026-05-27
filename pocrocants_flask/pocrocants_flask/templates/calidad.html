@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Crocants — Calidad</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg:       #0d0d0f;
+      --surface:  #161618;
+      --surface2: #1e1e21;
+      --border:   #2a2a2e;
+      --green:    #3dff6e;
+      --green-dim:#1a4d2e;
+      --yellow:   #f5a623;
+      --yellow-dim:#3d2a00;
+      --blue:     #4a9eff;
+      --blue-dim: #0d2b4d;
+      --red:      #ff4a6b;
+      --red-dim:  #3d0d18;
+      --orange:   #ff8c42;
+      --orange-dim:#3d2200;
+      --text:     #e8e8ee;
+      --muted:    #6b6b78;
+      --radius:   10px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Syne', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── NAV ── */
+    nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2rem; height: 60px;
+      border-bottom: 1px solid var(--border);
+    }
+    .logo { font-size: 1.4rem; font-weight: 800; letter-spacing: -1px; }
+    .logo span { color: var(--green); }
+    nav a { color: var(--muted); text-decoration: none; font-size: .85rem; }
+    nav a:hover { color: var(--text); }
+
+    /* ── HEADER ── */
+    .page-header {
+      display: flex; align-items: center; gap: 1rem;
+      padding: 2.5rem 2rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .icon-box {
+      width: 52px; height: 52px; border-radius: 12px;
+      background: var(--surface2);
+      display: grid; place-items: center; font-size: 1.5rem;
+    }
+    .page-header h1 { font-size: 2.2rem; font-weight: 800; }
+    .page-header p  { color: var(--muted); font-size: .9rem; margin-top: .15rem; }
+
+    /* ── STATS ── */
+    .stats {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 1px; background: var(--border);
+      margin: 1.5rem 2rem;
+      border-radius: var(--radius); overflow: hidden;
+    }
+    .stat { background: var(--surface); padding: 1.4rem 1.8rem; }
+    .stat-val { font-family: 'Space Mono', monospace; font-size: 2rem; font-weight: 700; line-height: 1; }
+    .stat-label { font-size: .75rem; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-top: .3rem; }
+    .c-green  { color: var(--green); }
+    .c-yellow { color: var(--yellow); }
+    .c-blue   { color: var(--blue); }
+    .c-red    { color: var(--red); }
+    .c-orange { color: var(--orange); }
+
+    /* ── MAIN GRID ── */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 400px 1fr;
+      gap: 1.5rem;
+      padding: 0 2rem 2rem;
+      align-items: start;
+    }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+    }
+    .card h2 { font-size: 1rem; font-weight: 700; margin-bottom: 1.2rem; }
+
+    /* ── FORM ── */
+    .form-group { margin-bottom: 1rem; }
+    label { display: block; font-size: .75rem; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: .4rem; }
+    input, select, textarea {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: 'Syne', sans-serif;
+      font-size: .9rem;
+      padding: .65rem 1rem;
+      outline: none;
+      transition: border-color .2s;
+    }
+    input:focus, select:focus, textarea:focus { border-color: var(--green); }
+    input::placeholder, textarea::placeholder { color: var(--muted); }
+    textarea { resize: vertical; min-height: 80px; }
+    select option { background: var(--surface2); }
+
+    /* ── CHECKLIST ── */
+    .checklist { display: flex; flex-direction: column; gap: .5rem; margin-bottom: 1rem; }
+    .check-item {
+      display: flex; align-items: center; gap: .75rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: .75rem 1rem;
+      cursor: pointer;
+      transition: border-color .15s, background .15s;
+      user-select: none;
+    }
+    .check-item:hover { border-color: var(--green); }
+    .check-item input[type=checkbox] { display: none; }
+    .check-box {
+      width: 18px; height: 18px;
+      border: 1.5px solid var(--border);
+      border-radius: 5px;
+      display: grid; place-items: center;
+      font-size: .7rem;
+      flex-shrink: 0;
+      transition: all .15s;
+    }
+    .check-item.checked .check-box {
+      background: var(--green);
+      border-color: var(--green);
+      color: #000;
+    }
+    .check-item.checked { border-color: var(--green-dim); background: rgba(61,255,110,.04); }
+    .check-text { font-size: .88rem; }
+    .check-text small { display: block; color: var(--muted); font-size: .75rem; margin-top: .1rem; }
+
+    /* ── RATING ── */
+    .rating-group { display: flex; gap: .5rem; }
+    .rating-btn {
+      flex: 1;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: .6rem .4rem;
+      color: var(--muted);
+      font-family: 'Syne', sans-serif;
+      font-size: .78rem;
+      cursor: pointer;
+      text-align: center;
+      transition: all .2s;
+      display: flex; flex-direction: column; align-items: center; gap: .25rem;
+    }
+    .rating-btn .star { font-size: 1rem; }
+    .rating-btn:hover { border-color: var(--yellow); color: var(--text); }
+    .rating-btn.active-5 { border-color: var(--green);  background: var(--green-dim);  color: var(--green); }
+    .rating-btn.active-4 { border-color: var(--blue);   background: var(--blue-dim);   color: var(--blue); }
+    .rating-btn.active-3 { border-color: var(--yellow); background: var(--yellow-dim); color: var(--yellow); }
+    .rating-btn.active-2 { border-color: var(--orange); background: var(--orange-dim); color: var(--orange); }
+    .rating-btn.active-1 { border-color: var(--red);    background: var(--red-dim);    color: var(--red); }
+
+    .btn-submit {
+      width: 100%;
+      background: var(--green);
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      padding: .8rem;
+      font-family: 'Syne', sans-serif;
+      font-size: .95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity .2s;
+      margin-top: .5rem;
+    }
+    .btn-submit:hover { opacity: .85; }
+
+    /* ── SCORE RING ── */
+    .score-section {
+      display: flex; align-items: center; gap: 1.5rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.2rem;
+      margin-bottom: 1rem;
+    }
+    .ring-wrap { position: relative; width: 80px; height: 80px; flex-shrink: 0; }
+    .ring-wrap svg { transform: rotate(-90deg); }
+    .ring-bg { fill: none; stroke: var(--surface2); stroke-width: 7; }
+    .ring-fg { fill: none; stroke: var(--green); stroke-width: 7; stroke-linecap: round;
+               stroke-dasharray: 220; stroke-dashoffset: 33; transition: stroke-dashoffset .6s ease; }
+    .ring-label {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+    }
+    .ring-label .val { font-family: 'Space Mono', monospace; font-size: 1.1rem; font-weight: 700; color: var(--green); }
+    .ring-label .lbl { font-size: .6rem; color: var(--muted); text-transform: uppercase; }
+    .score-info h3 { font-size: 1rem; font-weight: 700; }
+    .score-info p { font-size: .82rem; color: var(--muted); margin-top: .25rem; }
+
+    /* ── TABLE ── */
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+    thead th {
+      text-align: left; padding: .6rem 1rem;
+      font-size: .72rem; text-transform: uppercase; letter-spacing: .07em;
+      color: var(--muted); border-bottom: 1px solid var(--border);
+    }
+    tbody tr { border-bottom: 1px solid var(--border); transition: background .15s; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: var(--surface2); }
+    tbody td { padding: .85rem 1rem; vertical-align: middle; }
+    .pid { font-family: 'Space Mono', monospace; color: var(--green); font-size: .82rem; }
+
+    .badge {
+      display: inline-flex; align-items: center; gap: .35rem;
+      padding: .3rem .75rem; border-radius: 6px;
+      font-size: .78rem; font-weight: 600;
+    }
+    .badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+    .badge-green  { background: var(--green-dim);  color: var(--green); }
+    .badge-yellow { background: var(--yellow-dim); color: var(--yellow); }
+    .badge-red    { background: var(--red-dim);    color: var(--red); }
+    .badge-blue   { background: var(--blue-dim);   color: var(--blue); }
+    .badge-orange { background: var(--orange-dim); color: var(--orange); }
+
+    .stars-display { color: var(--yellow); font-size: .85rem; letter-spacing: .05em; }
+
+    /* ── CRITERIA BAR ── */
+    .criteria-list { display: flex; flex-direction: column; gap: .75rem; margin-bottom: .5rem; }
+    .criteria-row { display: flex; align-items: center; gap: .75rem; }
+    .criteria-name { font-size: .82rem; color: var(--muted); width: 110px; flex-shrink: 0; }
+    .bar-track { flex: 1; height: 6px; background: var(--surface2); border-radius: 3px; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 3px; transition: width .6s ease; }
+    .bar-pct { font-family: 'Space Mono', monospace; font-size: .75rem; color: var(--text); width: 36px; text-align: right; }
+
+    @media (max-width: 900px) {
+      .main-grid { grid-template-columns: 1fr; }
+      .stats { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">Croc<span>ants</span></div>
+  <a href="/">← Volver al inicio</a>
+</nav>
+
+<!-- HEADER -->
+<div class="page-header">
+  <div class="icon-box">🔍</div>
+  <div>
+    <h1>Calidad</h1>
+    <p>Verificación de calidad: inspecciones y reportes</p>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat">
+    <div class="stat-val c-green" id="q-score">0%</div>
+    <div class="stat-label">Puntuación hoy</div>
+  </div>
+  <div class="stat">
+    <div class="stat-val c-blue" id="q-inspecciones">0</div>
+    <div class="stat-label">Inspecciones</div>
+  </div>
+  <div class="stat">
+    <div class="stat-val c-yellow" id="q-observaciones">0</div>
+    <div class="stat-label">Observaciones</div>
+  </div>
+  <div class="stat">
+    <div class="stat-val c-red" id="q-rechazos">0</div>
+    <div class="stat-label">Rechazos</div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main-grid">
+
+  <!-- FORM -->
+  <div class="card">
+    <h2>Nueva Inspección</h2>
+
+    <div class="form-group">
+      <label>Pedido a inspeccionar</label>
+      <select id="q-pedido">
+        <option value="">Seleccionar pedido...</option>
+        <option value="P001">P001 — Familia López</option>
+        <option value="P002">P002 — Rodrigo M.</option>
+        <option value="P003">P003 — Delivery #5</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Inspector</label>
+      <input type="text" id="q-inspector" placeholder="Nombre del responsable" />
+    </div>
+
+    <div class="form-group">
+      <label>Checklist de calidad</label>
+      <div class="checklist" id="checklist">
+        <label class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box"></div>
+          <div class="check-text">
+            Cocción correcta
+            <small>El pollo está bien cocido, sin partes crudas</small>
+          </div>
+        </label>
+        <label class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box"></div>
+          <div class="check-text">
+            Temperatura adecuada
+            <small>Servido caliente, entre 70°C – 80°C</small>
+          </div>
+        </label>
+        <label class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box"></div>
+          <div class="check-text">
+            Presentación correcta
+            <small>Bien emplatado, porciones exactas</small>
+          </div>
+        </label>
+        <label class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box"></div>
+          <div class="check-text">
+            Acompañamientos completos
+            <small>Papas, ensalada o gaseosa según pedido</small>
+          </div>
+        </label>
+        <label class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box"></div>
+          <div class="check-text">
+            Higiene del empaque
+            <small>Envase limpio, sellado y sin roturas</small>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Puntuación general</label>
+      <div class="rating-group" id="ratingGroup">
+        <button class="rating-btn" onclick="setRating(this,1)"><span class="star">⭐</span>1</button>
+        <button class="rating-btn" onclick="setRating(this,2)"><span class="star">⭐</span>2</button>
+        <button class="rating-btn" onclick="setRating(this,3)"><span class="star">⭐</span>3</button>
+        <button class="rating-btn" onclick="setRating(this,4)"><span class="star">⭐</span>4</button>
+        <button class="rating-btn" onclick="setRating(this,5)"><span class="star">⭐</span>5</button>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Observaciones</label>
+      <textarea id="q-obs" placeholder="Describe cualquier problema o mejora detectada..."></textarea>
+    </div>
+
+    <button class="btn-submit" onclick="registrarInspeccion()">Registrar Inspección</button>
+  </div>
+
+  <!-- RIGHT SIDE -->
+  <div style="display:flex;flex-direction:column;gap:1rem;">
+
+    <!-- Score general -->
+    <div class="card">
+      <h2>Calidad del día</h2>
+      <div class="score-section">
+        <div class="ring-wrap">
+          <svg width="80" height="80" viewBox="0 0 80 80">
+            <circle class="ring-bg" cx="40" cy="40" r="34"/>
+            <circle class="ring-fg" id="ring-fg" cx="40" cy="40" r="34"/>
+          </svg>
+          <div class="ring-label">
+            <span class="val" id="ring-val">0%</span>
+            <span class="lbl">Score</span>
+          </div>
+        </div>
+        <div class="score-info">
+          <h3 id="q-status-label">Sin datos</h3>
+          <p id="q-status-desc">Aún no se han registrado inspecciones hoy.</p>
+        </div>
+      </div>
+
+      <div class="criteria-list" id="criteria-list">
+        <div class="criteria-row">
+          <span class="criteria-name">Cocción</span>
+          <div class="bar-track"><div class="bar-fill" id="bar-coccion" style="width:0%;background:var(--green);"></div></div>
+          <span class="bar-pct" id="pct-coccion">0%</span>
+        </div>
+        <div class="criteria-row">
+          <span class="criteria-name">Temperatura</span>
+          <div class="bar-track"><div class="bar-fill" id="bar-temp" style="width:0%;background:var(--yellow);"></div></div>
+          <span class="bar-pct" id="pct-temp">0%</span>
+        </div>
+        <div class="criteria-row">
+          <span class="criteria-name">Presentación</span>
+          <div class="bar-track"><div class="bar-fill" id="bar-presentacion" style="width:0%;background:var(--blue);"></div></div>
+          <span class="bar-pct" id="pct-presentacion">0%</span>
+        </div>
+        <div class="criteria-row">
+          <span class="criteria-name">Acompañam.</span>
+          <div class="bar-track"><div class="bar-fill" id="bar-acompanamiento" style="width:0%;background:var(--green);"></div></div>
+          <span class="bar-pct" id="pct-acompanamiento">0%</span>
+        </div>
+        <div class="criteria-row">
+          <span class="criteria-name">Empaque</span>
+          <div class="bar-track"><div class="bar-fill" id="bar-empaque" style="width:0%;background:var(--yellow);"></div></div>
+          <span class="bar-pct" id="pct-empaque">0%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Historial -->
+    <div class="card">
+      <h2>Historial de Inspecciones</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Pedido</th>
+              <th>Inspector</th>
+              <th>Puntuación</th>
+              <th>Hora</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody id="inspecciones-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  let inspecciones = [
+    { id: 'I007', pedido: 'P003', inspector: 'María G.', rating: 5, obs: '', hora: '13:50', estado: 'aprobado' },
+    { id: 'I006', pedido: 'P002', inspector: 'Carlos R.', rating: 4, obs: 'Temperatura ligeramente baja', hora: '13:15', estado: 'observado' },
+    { id: 'I005', pedido: 'P001', inspector: 'María G.', rating: 5, obs: '', hora: '12:40', estado: 'aprobado' },
+    { id: 'I004', pedido: 'P000', inspector: 'Luis T.', rating: 3, obs: 'Empaque dañado, cambiar proveedor', hora: '11:30', estado: 'con_notas' },
+  ];
+
+  let currentRating = 0;
+
+  function toggleCheck(el) {
+    el.classList.toggle('checked');
+    const box = el.querySelector('.check-box');
+    box.textContent = el.classList.contains('checked') ? '✓' : '';
+  }
+
+  function setRating(btn, val) {
+    document.querySelectorAll('.rating-btn').forEach(b => { b.className = 'rating-btn'; });
+    btn.classList.add(`active-${val}`);
+    currentRating = val;
+  }
+
+  function registrarInspeccion() {
+    const pedido = document.getElementById('q-pedido').value;
+    const inspector = document.getElementById('q-inspector').value.trim();
+    const obs = document.getElementById('q-obs').value.trim();
+    if (!pedido || !inspector) { alert('Selecciona un pedido e ingresa el nombre del inspector.'); return; }
+    if (!currentRating) { alert('Selecciona una puntuación.'); return; }
+    const ahora = new Date();
+    const hora = ahora.getHours().toString().padStart(2, '0') + ':' + ahora.getMinutes().toString().padStart(2, '0');
+    const id = 'I' + String(inspecciones.length + 1).padStart(3, '0');
+    const estado = currentRating >= 4 ? 'aprobado' : currentRating >= 3 ? 'observado' : 'con_notas';
+    inspecciones.unshift({ id, pedido, inspector, rating: currentRating, obs, hora, estado });
+    document.getElementById('q-pedido').value = '';
+    document.getElementById('q-inspector').value = '';
+    document.getElementById('q-obs').value = '';
+    document.querySelectorAll('.check-item').forEach(c => { c.classList.remove('checked'); c.querySelector('.check-box').textContent = ''; });
+    document.querySelectorAll('.rating-btn').forEach(b => { b.className = 'rating-btn'; });
+    currentRating = 0;
+    renderInspecciones();
+  }
+
+  function getStars(n) {
+    return '★'.repeat(n) + '☆'.repeat(5 - n);
+  }
+
+  function getEstadoInfo(estado) {
+    const map = {
+      aprobado:  { badge: 'badge-green',  label: 'Aprobado' },
+      observado: { badge: 'badge-yellow', label: 'Observado' },
+      con_notas: { badge: 'badge-orange', label: 'Con notas' },
+      rechazado: { badge: 'badge-red',    label: 'Rechazado' },
+    };
+    return map[estado] || map.aprobado;
+  }
+
+  function renderInspecciones() {
+    document.getElementById('inspecciones-body').innerHTML = inspecciones.map(i => {
+      const ei = getEstadoInfo(i.estado);
+      return `<tr>
+        <td class="pid">${i.id}</td>
+        <td>${i.pedido}</td>
+        <td style="font-size:.85rem;">${i.inspector}</td>
+        <td><span class="stars-display">${getStars(i.rating)}</span></td>
+        <td style="color:var(--muted);font-size:.82rem;">${i.hora}</td>
+        <td><span class="badge ${ei.badge}">${ei.label}</span></td>
+      </tr>`;
+    }).join('');
+
+    const total = inspecciones.length;
+    const aprobados = inspecciones.filter(i => i.estado === 'aprobado').length;
+    const observados = inspecciones.filter(i => i.estado === 'observado' || i.estado === 'con_notas').length;
+    const rechazos = inspecciones.filter(i => i.estado === 'rechazado').length;
+    const avgRating = total ? (inspecciones.reduce((s, i) => s + i.rating, 0) / total) : 0;
+    const pct = Math.round(avgRating / 5 * 100);
+
+    document.getElementById('q-score').textContent = pct + '%';
+    document.getElementById('q-inspecciones').textContent = total;
+    document.getElementById('q-observaciones').textContent = observados;
+    document.getElementById('q-rechazos').textContent = rechazos;
+
+    document.getElementById('ring-val').textContent = pct + '%';
+    const circumference = 220;
+    const offset = circumference - (pct / 100) * circumference;
+    document.getElementById('ring-fg').style.strokeDashoffset = offset;
+
+    const statusLabel = document.getElementById('q-status-label');
+    const statusDesc = document.getElementById('q-status-desc');
+    if (!total) {
+      statusLabel.textContent = 'Sin datos';
+      statusDesc.textContent = 'Aún no se han registrado inspecciones hoy.';
+    } else if (pct >= 80) {
+      statusLabel.textContent = 'Buena calidad';
+      statusDesc.textContent = `${total} inspección(es) realizada(s) hoy. ${observados} observación(es).`;
+    } else if (pct >= 60) {
+      statusLabel.textContent = 'Calidad regular';
+      statusDesc.textContent = `${total} inspección(es) realizada(s) hoy. Se recomienda mejorar.`;
+    } else {
+      statusLabel.textContent = 'Necesita mejora';
+      statusDesc.textContent = `${total} inspección(es) realizada(s) hoy. Varios puntos por corregir.`;
+    }
+
+    const checkedCount = document.querySelectorAll('#checklist .check-item.checked').length;
+    const checklistTotal = document.querySelectorAll('#checklist .check-item').length;
+    const checkPct = checklistTotal ? Math.round(checkedCount / checklistTotal * 100) : 0;
+    const barData = [
+      { id: 'coccion', pct: Math.min(100, checkPct + 10) },
+      { id: 'temp', pct: Math.min(100, checkPct - 5) },
+      { id: 'presentacion', pct: Math.min(100, checkPct + 5) },
+      { id: 'acompanamiento', pct: Math.min(100, checkPct + 15) },
+      { id: 'empaque', pct: Math.min(100, checkPct - 10) },
+    ];
+    barData.forEach(b => {
+      const el = document.getElementById('bar-' + b.id);
+      const pctEl = document.getElementById('pct-' + b.id);
+      if (el) el.style.width = b.pct + '%';
+      if (pctEl) pctEl.textContent = b.pct + '%';
+    });
+  }
+
+  renderInspecciones();
+</script>
+</body>
+</html>

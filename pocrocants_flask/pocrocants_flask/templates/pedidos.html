@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Crocants — Pedidos</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #0d0d0d; --surface: #161616; --border: #2a2a2a;
+      --accent: #00e87a; --text: #f0f0f0; --muted: #888;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; }
+ 
+    header { padding: 1.5rem 3rem; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); }
+    .logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.4rem; color: var(--accent); text-decoration: none; }
+    .logo span { color: var(--text); }
+    .back { color: var(--muted); text-decoration: none; font-size: 0.9rem; display: flex; align-items: center; gap: 0.4rem; transition: color 0.2s; }
+    .back:hover { color: var(--accent); }
+ 
+    .page-header { padding: 3rem 3rem 2rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 1.2rem; }
+    .page-icon { width: 56px; height: 56px; background: #1a1a1a; border: 1px solid var(--border); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; }
+    .page-header h1 { font-family: 'Syne', sans-serif; font-size: 1.8rem; font-weight: 800; }
+    .page-header p { color: var(--muted); font-size: 0.9rem; margin-top: 0.2rem; }
+ 
+    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; border: 1px solid var(--border); margin: 2rem 3rem; border-radius: 14px; overflow: hidden; }
+    .stat { background: var(--surface); padding: 1.5rem; text-align: center; }
+    .stat .num { font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; color: var(--accent); }
+    .stat .lbl { color: var(--muted); font-size: 0.82rem; margin-top: 0.2rem; }
+ 
+    .content { padding: 0 3rem 3rem; display: grid; grid-template-columns: 360px 1fr; gap: 2rem; }
+ 
+    .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 2rem; }
+    .panel h2 { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 700; margin-bottom: 1.5rem; }
+    .field { margin-bottom: 1.1rem; }
+    .field label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 0.4rem; }
+    .field input, .field select {
+      width: 100%; background: #111; border: 1px solid var(--border); border-radius: 8px;
+      color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.95rem;
+      padding: 0.7rem 1rem; outline: none; transition: border-color 0.2s;
+    }
+    .field input:focus, .field select:focus { border-color: var(--accent); }
+    .field select option { background: #1a1a1a; }
+ 
+    /* Carrito */
+    .menu-items { display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 1.2rem; }
+    .menu-item {
+      display: flex; justify-content: space-between; align-items: center;
+      background: #111; border: 1px solid var(--border); border-radius: 8px; padding: 0.7rem 1rem;
+    }
+    .menu-item span { font-size: 0.9rem; }
+    .menu-item .precio { color: var(--accent); font-weight: 600; font-size: 0.85rem; }
+    .add-btn {
+      background: transparent; border: 1px solid var(--accent); color: var(--accent);
+      border-radius: 6px; width: 28px; height: 28px; cursor: pointer; font-size: 1rem;
+      display: flex; align-items: center; justify-content: center; transition: background 0.2s;
+    }
+    .add-btn:hover { background: var(--accent); color: #000; }
+ 
+    .carrito-items { min-height: 60px; margin-bottom: 1rem; }
+    .cart-row { display: flex; justify-content: space-between; font-size: 0.88rem; padding: 0.35rem 0; border-bottom: 1px solid var(--border); color: var(--muted); }
+    .cart-row span:last-child { color: var(--accent); font-weight: 600; }
+    .total-row { display: flex; justify-content: space-between; font-family: 'Syne', sans-serif; font-weight: 700; padding: 0.7rem 0 0; }
+    .total-row span:last-child { color: var(--accent); }
+ 
+    .btn-primary {
+      width: 100%; background: var(--accent); color: #000; font-family: 'Syne', sans-serif;
+      font-weight: 700; font-size: 0.95rem; padding: 0.8rem; border: none; border-radius: 8px;
+      cursor: pointer; transition: opacity 0.2s; margin-top: 1rem;
+    }
+    .btn-primary:hover { opacity: 0.85; }
+ 
+    /* Tabla de pedidos */
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; }
+    th { font-family: 'Syne', sans-serif; font-size: 0.8rem; color: var(--muted); text-align: left; padding: 0.8rem 1rem; border-bottom: 1px solid var(--border); font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; }
+    td { font-size: 0.9rem; padding: 1rem; border-bottom: 1px solid #1e1e1e; vertical-align: middle; }
+    tr:hover td { background: #1a1a1a; }
+    .badge { font-size: 0.75rem; padding: 0.2rem 0.7rem; border-radius: 50px; font-weight: 600; }
+    .badge.pendiente { background: #2a2200; color: #f0b429; border: 1px solid #f0b42944; }
+    .badge.preparando { background: #1a2a3a; color: #60aaff; border: 1px solid #60aaff44; }
+    .badge.listo { background: #1a3a2a; color: #00e87a; border: 1px solid #00e87a44; }
+    .badge.entregado { background: #1a1a1a; color: var(--muted); border: 1px solid var(--border); }
+ 
+    .select-estado { background: transparent; border: none; color: inherit; font-size: 0.85rem; cursor: pointer; }
+ 
+    .toast { position: fixed; bottom: 2rem; right: 2rem; background: var(--accent); color: #000; font-family: 'Syne', sans-serif; font-weight: 700; padding: 0.9rem 1.5rem; border-radius: 10px; transform: translateY(100px); opacity: 0; transition: all 0.3s; z-index: 99; }
+    .toast.show { transform: translateY(0); opacity: 1; }
+ 
+    @media (max-width: 900px) {
+      header, .page-header, .content { padding-left: 1.5rem; padding-right: 1.5rem; }
+      .stats { margin-left: 1.5rem; margin-right: 1.5rem; grid-template-columns: repeat(2, 1fr); }
+      .content { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+ 
+<header>
+  <a href="/" class="logo">Croc<span>ants</span></a>
+  <a href="/" class="back">← Volver al inicio</a>
+</header>
+ 
+<div class="page-header">
+  <div class="page-icon">📦</div>
+  <div>
+    <h1>Pedidos</h1>
+    <p>Registra y monitorea pedidos en tiempo real</p>
+  </div>
+</div>
+ 
+<div class="stats">
+  <div class="stat"><div class="num" id="s-total">0</div><div class="lbl">Total hoy</div></div>
+  <div class="stat"><div class="num" id="s-pendiente" style="color:#f0b429">0</div><div class="lbl">Pendientes</div></div>
+  <div class="stat"><div class="num" id="s-preparando" style="color:#60aaff">0</div><div class="lbl">Preparando</div></div>
+  <div class="stat"><div class="num" id="s-listo">0</div><div class="lbl">Listos</div></div>
+</div>
+ 
+<div class="content">
+ 
+  <!-- Formulario nuevo pedido -->
+  <div>
+    <div class="panel" style="margin-bottom:1.5rem;">
+      <h2>Nuevo Pedido</h2>
+      <div class="field"><label>Cliente</label><input type="text" id="cli-nombre" placeholder="Nombre del cliente"/></div>
+      <div class="field"><label>Tipo de entrega</label>
+        <select id="cli-tipo">
+          <option>Mesa</option><option>Para llevar</option><option>Delivery</option>
+        </select>
+      </div>
+      <div class="field"><label>Mesa / Dirección</label><input type="text" id="cli-mesa" placeholder="Ej: Mesa 3 o Jr. Lima 120"/></div>
+    </div>
+ 
+    <div class="panel">
+      <h2>🍗 Menú</h2>
+      <div class="menu-items" id="menu-list"></div>
+      <hr style="border-color:var(--border); margin-bottom:1rem;"/>
+      <h2 style="margin-bottom:0.8rem;">Carrito</h2>
+      <div class="carrito-items" id="carrito-list">
+        <p style="color:var(--muted); font-size:0.85rem;">Sin productos aún...</p>
+      </div>
+      <div class="total-row"><span>Total:</span><span id="total-precio">S/ 0.00</span></div>
+      <button class="btn-primary" onclick="registrarPedido()">Confirmar Pedido</button>
+    </div>
+  </div>
+ 
+  <!-- Lista pedidos -->
+  <div class="panel">
+    <h2 style="margin-bottom:1.5rem;">Pedidos del Día</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>#</th><th>Cliente</th><th>Items</th><th>Total</th><th>Tipo</th><th>Estado</th></tr>
+        </thead>
+        <tbody id="pedidos-body"></tbody>
+      </table>
+    </div>
+  </div>
+ 
+</div>
+ 
+<div class="toast" id="toast">📦 Pedido registrado</div>
+ 
+<script>
+const menu = [
+  { nombre: '1/4 Pollo a la brasa', precio: 18 },
+  { nombre: '1/2 Pollo a la brasa', precio: 32 },
+  { nombre: 'Pollo entero', precio: 58 },
+  { nombre: 'Pollo broaster personal', precio: 22 },
+  { nombre: 'Papas fritas', precio: 8 },
+  { nombre: 'Ensalada fresca', precio: 7 },
+  { nombre: 'Gaseosa 1L', precio: 5 },
+  { nombre: 'Chicha morada', precio: 4 },
+];
+ 
+let carrito = [];
+let pedidos = [
+  { id: 'P001', cliente: 'Familia López', items: '1/2 Pollo + Papas', total: 40, tipo: 'Mesa', estado: 'listo' },
+  { id: 'P002', cliente: 'Rodrigo M.', items: '1/4 Pollo + Gaseosa', total: 23, tipo: 'Para llevar', estado: 'preparando' },
+  { id: 'P003', cliente: 'Delivery #5', items: 'Pollo entero + Ensalada', total: 65, tipo: 'Delivery', estado: 'pendiente' },
+];
+ 
+function renderMenu() {
+  document.getElementById('menu-list').innerHTML = menu.map((item, i) => `
+    <div class="menu-item">
+      <span>${item.nombre}</span>
+      <div style="display:flex;align-items:center;gap:0.8rem;">
+        <span class="precio">S/ ${item.precio.toFixed(2)}</span>
+        <button class="add-btn" onclick="addToCart(${i})">+</button>
+      </div>
+    </div>
+  `).join('');
+}
+ 
+function addToCart(i) {
+  const item = menu[i];
+  const found = carrito.find(c => c.nombre === item.nombre);
+  if (found) found.qty++;
+  else carrito.push({ ...item, qty: 1 });
+  renderCarrito();
+}
+ 
+function renderCarrito() {
+  const el = document.getElementById('carrito-list');
+  if (!carrito.length) { el.innerHTML = '<p style="color:var(--muted);font-size:0.85rem;">Sin productos aún...</p>'; document.getElementById('total-precio').textContent = 'S/ 0.00'; return; }
+  el.innerHTML = carrito.map(c => `<div class="cart-row"><span>${c.qty}x ${c.nombre}</span><span>S/ ${(c.precio * c.qty).toFixed(2)}</span></div>`).join('');
+  const total = carrito.reduce((s, c) => s + c.precio * c.qty, 0);
+  document.getElementById('total-precio').textContent = 'S/ ' + total.toFixed(2);
+}
+ 
+function registrarPedido() {
+  const nombre = document.getElementById('cli-nombre').value.trim();
+  if (!nombre || !carrito.length) { alert('Ingresa el cliente y al menos un producto.'); return; }
+  const tipo = document.getElementById('cli-tipo').value;
+  const total = carrito.reduce((s, c) => s + c.precio * c.qty, 0);
+  const items = carrito.map(c => `${c.qty}x ${c.nombre}`).join(', ');
+  const id = 'P' + String(pedidos.length + 1).padStart(3, '0');
+  pedidos.unshift({ id, cliente: nombre, items, total, tipo, estado: 'pendiente' });
+  carrito = [];
+  renderCarrito();
+  document.getElementById('cli-nombre').value = '';
+  document.getElementById('cli-mesa').value = '';
+  renderPedidos();
+  const t = document.getElementById('toast'); t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2500);
+}
+ 
+function cambiarEstado(id, val) {
+  const p = pedidos.find(x => x.id === id);
+  if (p) { p.estado = val; renderPedidos(); }
+}
+ 
+function renderPedidos() {
+  document.getElementById('pedidos-body').innerHTML = pedidos.map(p => `
+    <tr>
+      <td style="color:var(--accent);font-weight:700;">${p.id}</td>
+      <td>${p.cliente}</td>
+      <td style="color:var(--muted);font-size:0.85rem;max-width:180px;">${p.items}</td>
+      <td style="font-weight:600;">S/ ${p.total.toFixed(2)}</td>
+      <td style="color:var(--muted);font-size:0.85rem;">${p.tipo}</td>
+      <td>
+        <select class="select-estado badge ${p.estado}" onchange="cambiarEstado('${p.id}', this.value)">
+          <option value="pendiente" ${p.estado==='pendiente'?'selected':''}>Pendiente</option>
+          <option value="preparando" ${p.estado==='preparando'?'selected':''}>Preparando</option>
+          <option value="listo" ${p.estado==='listo'?'selected':''}>Listo</option>
+          <option value="entregado" ${p.estado==='entregado'?'selected':''}>Entregado</option>
+        </select>
+      </td>
+    </tr>
+  `).join('');
+  document.getElementById('s-total').textContent = pedidos.length;
+  document.getElementById('s-pendiente').textContent = pedidos.filter(p => p.estado === 'pendiente').length;
+  document.getElementById('s-preparando').textContent = pedidos.filter(p => p.estado === 'preparando').length;
+  document.getElementById('s-listo').textContent = pedidos.filter(p => p.estado === 'listo').length;
+}
+ 
+renderMenu(); renderPedidos();
+</script>
+</body>
+</html>
